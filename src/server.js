@@ -5,6 +5,14 @@ const dotenv = require("dotenv");
 // Load environment variables
 dotenv.config();
 
+const cors = require("cors");
+
+app.use(cors({
+    origin: ["https://jfr-git-main-itay-bobers-projects.vercel.app"],
+    methods: ["GET", "POST"],
+}));
+
+
 // Initialize Express.js
 const app = express();
 app.use(express.json()); // Middleware for parsing JSON requests
