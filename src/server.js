@@ -18,8 +18,13 @@ const supabase = createClient(
     process.env.SUPABASE_ANON_KEY
 );
 
+const allowedOrigins = [
+    "http://localhost:3000", // Development environment
+    "https://jfr-git-main-itay-bobers-projects.vercel.app" // Production environment
+];
+
 app.use(cors({
-    origin: ["https://jfr-git-main-itay-bobers-projects.vercel.app"],
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
 }));
 
