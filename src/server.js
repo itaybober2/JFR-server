@@ -7,11 +7,6 @@ dotenv.config();
 
 const cors = require("cors");
 
-app.use(cors({
-    origin: ["https://jfr-git-main-itay-bobers-projects.vercel.app"],
-    methods: ["GET", "POST"],
-}));
-
 
 // Initialize Express.js
 const app = express();
@@ -22,6 +17,11 @@ const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_ANON_KEY
 );
+
+app.use(cors({
+    origin: ["https://jfr-git-main-itay-bobers-projects.vercel.app"],
+    methods: ["GET", "POST"],
+}));
 
 // Routes
 app.get("/", (req, res) => {
