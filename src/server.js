@@ -33,20 +33,28 @@ app.get("/", (req, res) => {
     res.send("Backend is running!");
 });
 
-// Create a new report
 app.post("/reports", async (req, res) => {
-    const { content } = req.body;
+    const { crowdedness, lineNumber } = req.body;
 
-    const { data, error } = await supabase
-        .from("reports")
-        .insert([{ content }]);
-
-    if (error) {
-        return res.status(500).json({ error: error.message });
+    // Validate inputs
+    if (typeof crowdedness !== "number" || typeof lineNumber !== "number") {
+        return res.status(400).json({ error: "Invalid input data" });
     }
 
-    res.status(200).json({ data });
+    try {
+        const { data, error } = await supabase
+            .from("reports")
+            .insert([{ crowdedness, lineNumber }]);
+
+        if (error) throw error;
+
+        res.status(200).json(data);
+    } catch (error) {
+        console.error("Error inserting report:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
+
 
 // Get all reports
 app.get("/reports", async (req, res) => {
