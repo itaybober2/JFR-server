@@ -37,7 +37,7 @@ app.post("/reports", async (req, res) => {
     const { crowdedness, lineNumber } = req.body;
 
     // Validate inputs
-    if (typeof crowdedness !== "number" || typeof lineNumber !== "number") {
+    if (typeof crowdedness !== "number" || typeof lineNumber !== "string") {
         return res.status(400).json({ error: "Invalid input data" });
     }
 
