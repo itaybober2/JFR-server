@@ -84,10 +84,10 @@ app.get("/reports", async (req, res) => {
     res.status(200).json({ data });
 });
 
-app.delete("/reports/:id", async (req, res) => {
-    const { id } = req.params;
+app.delete("/reports", async (req, res) => {
+    const { lineId } = req.params;
 
-    if (!id) {
+    if (!lineId) {
         return res.status(400).json({ error: "Invalid input data" });
     }
 
@@ -95,7 +95,7 @@ app.delete("/reports/:id", async (req, res) => {
         const { data, error } = await supabase
             .from("reports")
             .delete()
-            .eq("id", id);
+            .eq("lineId", lineId);
 
         if (error) throw error;
 
