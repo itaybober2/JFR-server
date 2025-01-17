@@ -2,7 +2,6 @@ const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
 const dotenv = require("dotenv");
 
-// Load environment variables
 dotenv.config();
 
 const cors = require("cors");
@@ -10,7 +9,7 @@ const cors = require("cors");
 
 // Initialize Express.js
 const app = express();
-app.use(express.json()); // Middleware for parsing JSON requests
+app.use(express.json());
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -25,7 +24,7 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"],
 }));
 
 // Routes
@@ -34,21 +33,37 @@ app.get("/", (req, res) => {
 });
 
 app.post("/reports", async (req, res) => {
-    const { crowdedness, lineNumber } = req.body;
+    const { crowded, inspector, roadBlock, pathChange, pathChangeDescription, lineNumber, lineId } = req.body;
 
-    // Validate inputs
-    if (typeof crowdedness !== "number" || typeof lineNumber !== "string") {
+    if (
+        typeof crowded !== "boolean" ||
+        typeof inspector !== "boolean" ||
+        typeof roadBlock !== "boolean" ||
+        typeof pathChange !== "boolean" ||
+        typeof lineNumber !== "string" ||
+        typeof pathChangeDescription !== "string" ||
+        typeof lineId !== "number"
+    ) {
         return res.status(400).json({ error: "Invalid input data" });
     }
 
     try {
         const { data, error } = await supabase
             .from("reports")
-            .insert([{ crowdedness, lineNumber }]);
+            .insert([{
+                crowded,
+                inspector,
+                roadBlock,
+                pathChange,
+                pathChangeDescription,
+                lineNumber,
+                lineId
+            }]);
 
         if (error) throw error;
 
         res.status(200).json(data);
+
     } catch (error) {
         console.error("Error inserting report:", error);
         res.status(500).json({ error: error.message });
@@ -67,6 +82,29 @@ app.get("/reports", async (req, res) => {
     }
 
     res.status(200).json({ data });
+});
+
+app.delete("/reports/:id", async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ error: "Invalid input data" });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from("reports")
+            .delete()
+            .eq("id", id);
+
+        if (error) throw error;
+
+        res.status(200).json(data);
+
+    } catch (error) {
+        console.error("Error deleting report:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Start the server
