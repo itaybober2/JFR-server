@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/reports", async (req, res) => {
-    const { crowded, inspector, roadBlock, pathChange, pathChangeDescription, lineNumber, lineId } = req.body;
+    const { crowded, inspector, roadBlock, pathChange, pathChangeDescription, lineNumber, lineId, closestStop } = req.body;
 
     if (
         typeof crowded !== "boolean" ||
@@ -42,7 +42,8 @@ app.post("/reports", async (req, res) => {
         typeof pathChange !== "boolean" ||
         typeof lineNumber !== "string" ||
         typeof pathChangeDescription !== "string" ||
-        typeof lineId !== "number"
+        typeof lineId !== "number" ||
+        typeof closestStop !== "string"
     ) {
         return res.status(400).json({ error: "Invalid input data" });
     }
@@ -57,7 +58,8 @@ app.post("/reports", async (req, res) => {
                 pathChange,
                 pathChangeDescription,
                 lineNumber,
-                lineId
+                lineId,
+                closestStop
             }]);
 
         if (error) throw error;
