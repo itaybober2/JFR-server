@@ -33,16 +33,18 @@ app.get("/", (req, res) => {
 });
 
 app.post("/reports", async (req, res) => {
-    const { crowded, inspector, roadBlock, pathChange, pathChangeDescription, lineNumber, lineId, closestStop } = req.body;
+    const { crowded, inspector, roadBlock, pathChange, wildDriving, stink, pathChangeDescription, lineNumber, lineId, closestStop } = req.body;
 
     if (
         typeof crowded !== "boolean" ||
         typeof inspector !== "boolean" ||
         typeof roadBlock !== "boolean" ||
         typeof pathChange !== "boolean" ||
+        typeof wildDriving !== "boolean" ||
+        typeof stink !== "boolean" ||
         typeof lineNumber !== "string" ||
         typeof pathChangeDescription !== "string" ||
-        typeof lineId !== "number" ||
+        typeof lineId !== "string" ||
         typeof closestStop !== "string"
     ) {
         return res.status(400).json({ error: "Invalid input data" });
@@ -56,13 +58,13 @@ app.post("/reports", async (req, res) => {
                 inspector,
                 roadBlock,
                 pathChange,
+                wildDriving,
+                stink,
                 pathChangeDescription,
                 lineNumber,
                 lineId,
                 closestStop
             }]);
-
-        if (error) throw error;
 
         res.status(200).json(data);
 
@@ -73,7 +75,6 @@ app.post("/reports", async (req, res) => {
 });
 
 
-// Get all reports
 app.get("/reports", async (req, res) => {
     const { data, error } = await supabase
         .from("reports")
