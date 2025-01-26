@@ -44,7 +44,7 @@ app.post("/reports", async (req, res) => {
         typeof stink !== "boolean" ||
         typeof lineNumber !== "string" ||
         typeof pathChangeDescription !== "string" ||
-        typeof lineId !== "string" ||
+        typeof lineId !== "number" ||
         typeof closestStop !== "string"
     ) {
         return res.status(400).json({ error: "Invalid input data" });
